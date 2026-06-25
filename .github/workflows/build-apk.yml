@@ -14,19 +14,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
 
-      - name: Install dependencies
-        working-directory: artifacts/phone-guard
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install all workspace dependencies
         run: pnpm install
 
       - name: Setup Expo & EAS
@@ -35,19 +34,19 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: Create EAS project (first time only)
+      - name: Initialize EAS project
         working-directory: artifacts/phone-guard
-        run: eas init --id $(eas project:create --non-interactive --json 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])" 2>/dev/null || eas project:info --json 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])" 2>/dev/null) --force || true
+        run: eas init --non-interactive || true
 
       - name: Build APK
         working-directory: artifacts/phone-guard
         run: eas build --platform android --profile apk --non-interactive --wait
 
-      - name: Get APK download URL
-        working-directory: artifacts/phone-guard
+      - name: Print download instructions
+        if: always()
         run: |
           echo ""
-          echo "======================================"
-          echo "APK READY — check expo.dev dashboard"
-          echo "or the URL printed above to download"
-          echo "======================================"
+          echo "================================================"
+          echo " Download your APK from: https://expo.dev"
+          echo " Go to: Your Project > Builds > Download APK"
+          echo "================================================"
