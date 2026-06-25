@@ -15,15 +15,21 @@
     },
     "ios": {
       "supportsTablet": false,
+      "bundleIdentifier": "com.phoneguard.app",
       "infoPlist": {
         "NSCameraUsageDescription": "PhoneGuard uses the camera to photograph unauthorized access attempts.",
         "NSMicrophoneUsageDescription": "PhoneGuard does not use the microphone."
       }
     },
     "android": {
+      "package": "com.phoneguard.app",
       "permissions": [
         "android.permission.CAMERA"
-      ]
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#0A0E1A"
+      }
     },
     "web": {
       "favicon": "./assets/images/icon.png"
@@ -41,6 +47,11 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "phone-guard"
+      }
     }
   }
 }
